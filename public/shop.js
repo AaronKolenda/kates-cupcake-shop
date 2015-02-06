@@ -5,7 +5,6 @@
 */
 
 var cupcakeShop = {
-
   /*
     shop.inventory: An object, representing the available stock of each flavor of cupcake. 
       If there are four chocolate available, and two vanilla, the property will be equal to:
@@ -15,7 +14,10 @@ var cupcakeShop = {
         vanilla: 2 
       }
   */
-  inventory: {},
+  inventory: { 
+        "chocolate": 4, 
+        "vanilla": 2 
+      },
 
   /*
     shop.price: A number, representing the price of a single cupcake.
@@ -42,7 +44,11 @@ var cupcakeShop = {
 
   */
   addFlavor: function(type) {
-
+    if (_.has(cupcakeShop.inventory, type)) {
+      return;
+    }
+    else cupcakeShop.inventory[type] = 0;
+    return;
   },
 
   /*
@@ -52,12 +58,20 @@ var cupcakeShop = {
   */
   removeFlavor: function(type) {
 
+    cupcakeShop.inventory = _.omit(cupcakeShop.inventory, type);
+
   },
 
   /*
     shop.listFlavors: Returns a list of the flavors for sale.
   */
   listFlavors: function() {
+
+    var newArray = [];
+
+    newArray = _.keys(cupcakeShop.inventory);
+
+    return newArray;
 
   },
 
@@ -68,6 +82,11 @@ var cupcakeShop = {
       If that that cupcake flavor is available, returns 0.
   */
   showStock: function(flavor) {
+
+    if (_.has(cupcakeShop.inventory, flavor)) {
+      return cupcakeShop.inventory[flavor];
+    }
+    else return 0;
 
   },
 
@@ -82,6 +101,11 @@ var cupcakeShop = {
       If that flavor DOESN'T exist in the inventory, do nothing.
   */
   restock: function(flavor, count) {
+
+    if (_.has(cupcakeShop.inventory, flavor)) {
+      cupcakeShop.inventory[flavor] = cupcakeShop.inventory[flavor] + count;
+    }
+
 
   },
 
@@ -98,6 +122,16 @@ var cupcakeShop = {
   */
   makeSale: function(flavor) {
 
+    if (_.has(cupcakeShop.inventory, flavor) && cupcakeShop.inventory[flavor] > 0) {
+
+        cupcakeShop.inventory[flavor] = cupcakeShop.inventory[flavor] - 1;
+        cupcakeShop.register = cupcakeShop.register + cupcakeShop.price;
+        return true;
+
+    }
+    else return false;
+
+
   },
 
   /*
@@ -108,6 +142,9 @@ var cupcakeShop = {
   */
   reconcile: function() {
 
+    cupcakeShop.bank = cupcakeShop.bank + cupcakeShop.register;
+    cupcakeShop.register = 0;
+
   },
 
   /*
@@ -115,6 +152,8 @@ var cupcakeShop = {
       (Note: This shop does not ever sell cookies. It is a cupcake shop.)
   */
   sellsCookies: function() {
+
+    return false;
     
   }
 
