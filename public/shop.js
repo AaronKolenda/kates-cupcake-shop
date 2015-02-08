@@ -19,6 +19,8 @@ var cupcakeShop = {
         "vanilla": 2 
       },
 
+  retired: ["something", "somethingelse"],
+
   /*
     shop.price: A number, representing the price of a single cupcake.
   */
@@ -155,6 +157,42 @@ var cupcakeShop = {
 
     return false;
     
+  },
+
+   discountSale: function(flavor, discount) {
+
+    if (_.has(cupcakeShop.inventory, flavor) && cupcakeShop.inventory[flavor] > 0) {
+
+        cupcakeShop.price = (cupcakeShop.price * discount);
+        cupcakeShop.inventory[flavor] = cupcakeShop.inventory[flavor] - 1;
+        cupcakeShop.register = cupcakeShop.register + cupcakeShop.price;
+        return true;
+
+    }
+    else return false;
+
+
+  },
+
+  bulkRestock: function(count) {
+
+   cupcakeShop.inventory = _.each(cupcakeShop.inventory, function(key, value){
+       value = value + count;
+       
+    });
+
+
+  },
+
+   retireFlavor: function(type) {
+    if (_.indexOf(cupcakeShop.retired, type) !== -1) {
+      return false;
+    }
+    else {
+    cupcakeShop.inventory = _.omit(cupcakeShop.inventory, type);
+    cupcakeShop.retired.push(type);
+    }
+
   }
 
 }
@@ -169,6 +207,7 @@ var cupcakeShop = {
     Don't modify it.
 */
 var resetShop = function() {
+  cupcakeShop.retired = [];
   cupcakeShop.inventory = {};
   cupcakeShop.price = 3;
   cupcakeShop.register = 0;

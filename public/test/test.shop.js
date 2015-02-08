@@ -377,7 +377,7 @@ describe("cupcakeShop.retireFlavor", function(){
 
       expect(cupcakeShop.inventory).to.have.keys("chocolate", "vanilla");
       expect(cupcakeShop.inventory).to.not.have.keys("red velvet");
-      expect(cupcakeShop.retired).to.have.keys("red velvet");
+      expect(cupcakeShop.retired).to.include("red velvet");
 
     });
 
@@ -394,7 +394,7 @@ describe("cupcakeShop.retireFlavor", function(){
 
       expect(cupcakeShop.inventory).to.have.keys("chocolate", "vanilla");
       expect(cupcakeShop.inventory).to.not.have.keys("red velvet");
-      expect(cupcakeShop.retired).to.have.keys("red velvet");
+      expect(cupcakeShop.retired).to.include("red velvet");
 
       expect(cupcakeShop.retireFlavor("red velvet")).to.equal(false);
 
