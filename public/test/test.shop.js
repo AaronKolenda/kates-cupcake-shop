@@ -266,4 +266,142 @@ describe("Kate's Cupcake Shop LLC. A Delaware Company", function(){
 
   });
 
+    describe("cupcakeShop.discountSale", function(){
+
+    it("exists", function(){
+      expect(cupcakeShop.discountSale).to.be.a("function");
+    });
+
+
+    it("should not sell an out of stock cupcake", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 5,
+        strawberry: 0
+      }
+
+      var saleResult = cupcakeShop.discountSale("strawberry", .4);
+
+      expect(saleResult).to.equal(false);
+      expect(cupcakeShop.register).to.equal(0);
+      expect(cupcakeShop.inventory).to.deep.equal({
+        chocolate: 5,
+        strawberry: 0
+      })
+
+    });
+
+    it("should not sell an non-existent flavor", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 5,
+        strawberry: 3
+      }
+
+      var saleResult = cupcakeShop.discountSale("vanilla", .3);
+
+      expect(saleResult).to.equal(false);
+      expect(cupcakeShop.register).to.equal(0);
+      expect(cupcakeShop.inventory).to.deep.equal({
+        chocolate: 5,
+        strawberry: 3
+      })
+    });
+
+    it("should sell the cupcake at the discounted price", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 5,
+        strawberry: 3
+      }
+
+      var saleResult = cupcakeShop.discountSale("chocolate", .5);
+
+      expect(saleResult).to.equal(true);
+      expect(cupcakeShop.price).to.equal(1.5);
+      expect(cupcakeShop.register).to.equal(1.5);
+      expect(cupcakeShop.inventory).to.deep.equal({
+        chocolate: 4,
+        strawberry: 3
+      })
+
+  });
+
+  });
+
+describe("cupcakeShop.bulkRestock", function(){
+
+    it("exists", function(){
+      expect(cupcakeShop.bulkRestock).to.be.a("function");
+    });
+
+    it("adds to stock of existing flavors", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 8,
+        vanilla: 4,
+        strawberry: 0
+      }
+
+      cupcakeShop.bulkRestock(10);
+      
+      expect(cupcakeShop.inventory).to.deep.equal({
+        chocolate: 18,
+        vanilla: 14,
+        strawberry: 10
+      })
+    });
+
+  });
+
+describe("cupcakeShop.retireFlavor", function(){
+
+    it("exists", function(){
+      expect(cupcakeShop.retireFlavor).to.be.a("function");
+    });
+
+    it("removes flavors", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 10,
+        vanilla: 5,
+        "red velvet": 15
+      }
+
+      cupcakeShop.retireFlavor("red velvet"); // so gross
+
+      expect(cupcakeShop.inventory).to.have.keys("chocolate", "vanilla");
+      expect(cupcakeShop.inventory).to.not.have.keys("red velvet");
+      expect(cupcakeShop.retired).to.have.keys("red velvet");
+
+    });
+
+    it("retires the flavor only once", function(){
+      resetShop();
+
+      cupcakeShop.inventory = {
+        chocolate: 10,
+        vanilla: 5,
+        "red velvet": 15
+      }
+
+      cupcakeShop.retireFlavor("red velvet"); // so gross
+
+      expect(cupcakeShop.inventory).to.have.keys("chocolate", "vanilla");
+      expect(cupcakeShop.inventory).to.not.have.keys("red velvet");
+      expect(cupcakeShop.retired).to.have.keys("red velvet");
+
+      expect(cupcakeShop.retireFlavor("red velvet")).to.equal(false);
+
+
+    });
+
+  });
+
+
 });
