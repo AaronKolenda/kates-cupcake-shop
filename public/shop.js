@@ -176,10 +176,10 @@ var cupcakeShop = {
 
   bulkRestock: function(count) {
 
-   cupcakeShop.inventory = _.each(cupcakeShop.inventory, function(key, value){
-       value = value + count;
-       
-    });
+    cupcakeShop.inventory = _.reduce(cupcakeShop.inventory, function(memory, value, key) {
+    memory[key] = value + count;
+    return memory;
+    }, {})
 
 
   },
