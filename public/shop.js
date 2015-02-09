@@ -49,8 +49,17 @@ var cupcakeShop = {
     if (_.has(cupcakeShop.inventory, type)) {
       return;
     }
-    else cupcakeShop.inventory[type] = 0;
+    
+    else  cupcakeShop.inventory[type] = {stock: 0, price: 0};
     return;
+  },
+
+  setPrice: function(type, num) {
+    if (_.has(cupcakeShop.inventory, type)) {
+      cupcakeShop.inventory[type]['price'] = num;
+      return;
+    }
+    
   },
 
   /*
@@ -81,12 +90,12 @@ var cupcakeShop = {
     shop.showStock: Accepts a string as a parameter, representing a cupcake flavor.
       Returns the quantity of that cupcake flavor in the inventory.
       
-      If that that cupcake flavor is available, returns 0.
+      If that that cupcake flavor is not available, returns 0.
   */
   showStock: function(flavor) {
 
     if (_.has(cupcakeShop.inventory, flavor)) {
-      return cupcakeShop.inventory[flavor];
+      return cupcakeShop.inventory[flavor]['stock'];
     }
     else return 0;
 
@@ -105,7 +114,7 @@ var cupcakeShop = {
   restock: function(flavor, count) {
 
     if (_.has(cupcakeShop.inventory, flavor)) {
-      cupcakeShop.inventory[flavor] = cupcakeShop.inventory[flavor] + count;
+      cupcakeShop.inventory[flavor]['stock'] = cupcakeShop.inventory[flavor]['stock'] + count;
     }
 
 
@@ -124,10 +133,10 @@ var cupcakeShop = {
   */
   makeSale: function(flavor) {
 
-    if (_.has(cupcakeShop.inventory, flavor) && cupcakeShop.inventory[flavor] > 0) {
+    if (_.has(cupcakeShop.inventory, flavor) && cupcakeShop.inventory[flavor]['stock'] > 0) {
 
-        cupcakeShop.inventory[flavor] = cupcakeShop.inventory[flavor] - 1;
-        cupcakeShop.register = cupcakeShop.register + cupcakeShop.price;
+        cupcakeShop.inventory[flavor]['stock'] = cupcakeShop.inventory[flavor]['stock'] - 1;
+        cupcakeShop.register = cupcakeShop.register + cupcakeShop.inventory[flavor]['price'];
         return true;
 
     }
@@ -161,11 +170,11 @@ var cupcakeShop = {
 
    discountSale: function(flavor, discount) {
 
-    if (_.has(cupcakeShop.inventory, flavor) && cupcakeShop.inventory[flavor] > 0) {
+    if (_.has(cupcakeShop.inventory, flavor) && cupcakeShop.inventory[flavor]['stock'] > 0) {
 
-        cupcakeShop.price = (cupcakeShop.price * discount);
-        cupcakeShop.inventory[flavor] = cupcakeShop.inventory[flavor] - 1;
-        cupcakeShop.register = cupcakeShop.register + cupcakeShop.price;
+        cupcakeShop.inventory[flavor]['price'] = (cupcakeShop.inventory[flavor]['price'] * discount);
+        cupcakeShop.inventory[flavor]['stock'] = cupcakeShop.inventory[flavor]['stock'] - 1;
+        cupcakeShop.register = cupcakeShop.register + cupcakeShop.inventory[flavor]['price'];
         return true;
 
     }
@@ -175,11 +184,10 @@ var cupcakeShop = {
   },
 
   bulkRestock: function(count) {
-
-    cupcakeShop.inventory = _.reduce(cupcakeShop.inventory, function(memory, value, key) {
-    memory[key] = value + count;
-    return memory;
-    }, {})
+    
+    _.each(cupcakeShop.inventory, function(value, key, list){
+     cupcakeShop.inventory[key]['stock'] =  cupcakeShop.inventory[key]['stock'] + count;
+  });
 
 
   },
