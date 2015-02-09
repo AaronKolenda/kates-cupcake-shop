@@ -15,8 +15,8 @@ var cupcakeShop = {
       }
   */
   inventory: { 
-        "chocolate": 4, 
-        "vanilla": 2 
+        chocolate: {stock: 10, price: 0},
+        vanilla: {stock: 5, price: 0}
       },
 
   retired: ["something", "somethingelse"],
